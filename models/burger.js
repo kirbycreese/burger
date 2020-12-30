@@ -1,34 +1,29 @@
-var express = require("express");
 var orm = require("../config/orm.js");
    //* Inside `burger.js`, import `orm.js` into `burger.js`var express = require("express");
 
-var PORT = process.env.PORT || 8080;
-
-var app = express();
-
-// Serve static content for the app from the "public" directory in the application directory.
-app.use(express.static("public"));
-
-// Parse application body as JSON
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Set Handlebars.
-var exphbs = require("express-handlebars");
-
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
-
-// Import routes and give the server access to them.
-var routes = require("./controllers/burgers_Controller.js");
-
-app.use(routes);
-
-// Start our server so that it can begin listening to client requests.
-app.listen(PORT, function() {
-  // Log (server-side) when our server has started
-  console.log("Server listening on: http://localhost:" + PORT);
-});
-
-
-   // * Export at the end of the `burger.js` file.
+   var burger = {
+      all: function(cb) {
+        orm.all("burgers", function(res) {
+          cb(res);
+        });
+      },
+      // The variables cols and vals are arrays.
+      create: function(cols, vals, cb) {
+        orm.create("burgers", cols, vals, function(res) {
+          cb(res);
+        });
+      },
+      update: function(objColVals, condition, cb) {
+        orm.update("burgers", objColVals, condition, function(res) {
+          cb(res);
+        });
+      },
+      delete: function(condition, cb) {
+        orm.delete("burgers", condition, function(res) {
+          cb(res);
+        });
+      }
+    };
+    
+    // Export the database functions for the controller (burgersController.js).
+    module.exports = burger;
