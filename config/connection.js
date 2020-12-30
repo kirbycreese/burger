@@ -1,14 +1,21 @@
-var Sequelize = require("sequelize");
+var mysql = require('mysql');
 
-var sequelize = new Sequelize("burgers_db", "root", "", {
-  host: "localhost",
+var connection = mysql.createConnection({
+  host: 'localhost',
   port: 3306,
-  dialect: "mysql",
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  }
+  user: 'root',
+  password: 'cosmo120',
+  database: 'burgers_db',
 });
 
-module.exports = sequelize;
+// Make connection.
+connection.connect(function (err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+  console.log('connected as id ' + connection.threadId);
+});
+
+// Export connection for our ORM to use.
+module.exports = connection;
